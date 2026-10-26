@@ -1,0 +1,6 @@
+# Dados de funcionários nunca vão para o GitHub: só o código da ferramenta
+*.xlsx
+*.xls
+*.csv
+relatorios/
+__pycache__/

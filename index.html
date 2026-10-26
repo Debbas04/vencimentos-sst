@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vencimentos de SST</title>
+<meta name="description" content="Relatório de vencimentos de ASO, treinamentos NR, ordens de serviço e CA de EPI. A planilha é lida no seu computador e não é enviada.">
+<meta name="theme-color" content="#E6E8E9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15191C" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--concreto:#E6E8E9;--papel:#FFFFFF;--grafite:#1D2328;--cimento:#56616A;--linha:#CBD1D5;
+--vermelho:#C8102E;--laranja:#E35205;--amarelo:#F6BE00;--azul:#005EB8;--verde:#19803A;--t-azul:#004A93;--f-azul:#E2EDF9;--t-erro:#A50D26;--f-erro:#FBE6E9;
+--cond:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;--corpo:"Barlow","Segoe UI",system-ui,sans-serif;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--concreto:#15191C;--papel:#1F2529;--grafite:#E7EAEC;--cimento:#9EA9B1;--linha:#353D43;
+--t-azul:#7DB8F5;--f-azul:#14283D;--t-erro:#FF8C99;--f-erro:#3B1A20;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--concreto);color:var(--grafite);font:400 16px/1.5 var(--corpo);-webkit-font-smoothing:antialiased}
+.faixa{display:flex;height:6px}.faixa span{flex:1}
+main{max-width:760px;margin:0 auto;padding:40px 16px 56px}
+h1,h2{font-family:var(--cond);font-weight:700;line-height:1.1;margin:0;text-wrap:balance}
+h1{font-size:clamp(36px,7vw,52px)}
+h2{font-size:24px;margin:40px 0 10px}
+p{margin:0}
+.lead{color:var(--cimento);margin-top:8px;max-width:60ch}
+.zona{margin-top:28px;background:var(--papel);border:2px dashed var(--azul);border-radius:6px;padding:32px 24px;text-align:center}
+.zona.sobre{background:var(--f-azul)}
+.zona p+p{margin-top:8px}
+.zona .titulo{font-family:var(--cond);font-size:24px;font-weight:600}
+.privado{color:var(--cimento);font-size:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;font:600 16px/1 var(--corpo);border-radius:4px;padding:12px 18px;min-height:44px;cursor:pointer;
+border:1px solid var(--linha);background:var(--papel);color:var(--grafite);touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn:hover{border-color:var(--grafite)}
+.btn.primario{background:var(--azul);border-color:var(--azul);color:#fff;margin:14px 0 4px}
+.btn.primario:hover{background:#004A93}
+.btn:focus-visible{outline:3px solid var(--grafite);outline-offset:2px}
+.btn[disabled]{opacity:.55;cursor:progress}
+.visualmente-oculto{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#status{margin-top:14px;min-height:24px;color:var(--cimento)}
+#status.erro{color:var(--t-erro);background:var(--f-erro);border-radius:4px;padding:10px 14px}
+.acoes{display:flex;flex-wrap:wrap;gap:10px}
+ol{margin:0;padding-left:22px}ol li+li{margin-top:6px}
+footer{margin-top:48px;color:var(--cimento);font-size:14px}
+footer a{color:inherit}
+</style>
+</head>
+<body>
+<div class="faixa" aria-hidden="true"><span style="background:var(--vermelho)"></span><span style="background:var(--azul)"></span><span style="background:var(--laranja)"></span><span style="background:var(--amarelo)"></span><span style="background:var(--verde)"></span></div>
+<main>
+<h1>Vencimentos de SST</h1>
+<p class="lead">Abra a planilha de controle e veja, por obra, o que está vencido, sem registro ou perto de vencer: ASO, treinamentos NR, ordens de serviço e CA de EPI.</p>
+
+<div class="zona" id="zona">
+  <p class="titulo">Arraste a planilha controle-sst.xlsx para cá</p>
+  <label class="btn primario" for="arquivo" id="escolher">Escolher planilha</label>
+  <input class="visualmente-oculto" type="file" id="arquivo" name="planilha" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+  <p class="privado">A planilha é lida aqui, no seu computador. Nada é enviado para a internet.</p>
+</div>
+<p id="status" role="status" aria-live="polite"></p>
+
+<h2>Ainda não tem a planilha?</h2>
+<div class="acoes">
+  <button type="button" class="btn" id="exemplo">Ver exemplo com dados fictícios</button>
+  <button type="button" class="btn" id="modelo">Baixar modelo vazio</button>
+</div>
+
+<h2>Como usar</h2>
+<ol>
+  <li>Baixe o modelo vazio e ajuste as abas Itens e Funções ao PGR e ao PCMSO da empresa.</li>
+  <li>Cadastre os funcionários e, a cada exame, treinamento ou OS, uma linha na aba Registros.</li>
+  <li>Uma vez por semana, abra a planilha aqui e resolva o bloco “Esta semana”.</li>
+</ol>
+
+<footer><p>Os prazos padrão foram conferidos em 26/10/2026. Na dúvida, vale o que está no PGR e no PCMSO da empresa. Não registre resultado de exame nem CID na planilha: só datas e aptidão.</p></footer>
+</main>
+
+<script>
+const PYODIDE = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
+const SCRIPTS = ['esquema.py', 'vencimentos.py', 'relatorio.py', 'criar_planilha.py', 'web.py'];
+const $ = s => document.querySelector(s);
+const status = $('#status');
+let pronto = null;
+
+function avisar(texto, erro = false) { status.textContent = texto; status.classList.toggle('erro', erro); }
+function hojeIso() { return new Date().toLocaleDateString('sv-SE'); }
+function agoraTexto() {
+  const d = new Date(), dois = n => String(n).padStart(2, '0');
+  return `${dois(d.getDate())}/${dois(d.getMonth() + 1)}/${d.getFullYear()} às ${dois(d.getHours())}:${dois(d.getMinutes())}`;
+}
+function carregarScript(src) {
+  return new Promise((ok, falha) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = ok; s.onerror = () => falha(new Error('sem conexão'));
+    document.head.appendChild(s);
+  });
+}
+
+// Python no navegador: começa a carregar assim que a página abre
+function preparar() {
+  pronto ??= (async () => {
+    await carregarScript(PYODIDE + 'pyodide.js');
+    const py = await loadPyodide({ indexURL: PYODIDE });
+    await py.loadPackage('micropip');
+    await py.pyimport('micropip').install('openpyxl==3.1.5');  // baixa só o código da biblioteca, do PyPI
+    for (const nome of SCRIPTS) {
+      const r = await fetch(nome, { cache: 'no-cache' });
+      if (!r.ok) throw new Error(`não achei ${nome}`);
+      py.FS.writeFile(nome, await r.text());
+    }
+    py.runPython('import sys; sys.path.insert(0, ".")');
+    return py.pyimport('web');
+  })();
+  return pronto;
+}
+
+function ocupado(sim) {
+  for (const b of document.querySelectorAll('button, #arquivo')) b.disabled = sim;
+  $('#escolher').toggleAttribute('aria-disabled', sim);
+}
+
+async function comPython(mensagem, tarefa) {
+  ocupado(true);
+  avisar(mensagem);
+  try {
+    const web = await preparar();
+    await tarefa(web);
+  } catch (e) {
+    console.error(e);
+    pronto = null;
+    avisar('Não consegui preparar a ferramenta. Confira a conexão com a internet e recarregue a página (F5).', true);
+  } finally {
+    ocupado(false);
+  }
+}
+
+function mostrarRelatorio(html) {
+  const barra = `<nav class="ferramenta" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:24px">
+<a href="${location.pathname}" style="color:inherit;font-weight:600">Abrir outra planilha</a>
+<button type="button" id="salvar-relatorio" style="font:inherit;font-weight:600;padding:8px 14px;border-radius:4px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer">Salvar este relatório</button></nav>
+<script class="ferramenta">document.getElementById('salvar-relatorio').addEventListener('click',()=>{
+const c=document.documentElement.cloneNode(true);c.querySelectorAll('.ferramenta').forEach(e=>e.remove());
+const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['<!doctype html>\\n'+c.outerHTML],{type:'text/html'}));
+a.download='vencimentos-'+new Date().toLocaleDateString('sv-SE')+'.html';a.click();});<\/script>`;
+  document.open();
+  document.write(html.replace('<main>', '<main>' + barra));
+  document.close();
+}
+
+async function abrirArquivo(arquivo) {
+  if (!arquivo) return;
+  if (!/\.xlsx$/i.test(arquivo.name)) { avisar(`“${arquivo.name}” não é uma planilha .xlsx. No Excel, use Salvar como → Pasta de Trabalho do Excel (.xlsx).`, true); return; }
+  await comPython(`Lendo ${arquivo.name}… na primeira vez a ferramenta leva uns 20 segundos para carregar.`, async web => {
+    const dados = new Uint8Array(await arquivo.arrayBuffer());
+    const res = JSON.parse(web.relatorio_de_bytes(dados, arquivo.name, hojeIso(), agoraTexto()));
+    if (res.erro) avisar(res.erro, true); else mostrarRelatorio(res.html);
+  });
+}
+
+function baixar(bytes, nome) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+  a.download = nome; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+$('#arquivo').addEventListener('change', e => abrirArquivo(e.target.files[0]));
+const zona = $('#zona');
+zona.addEventListener('dragover', e => { e.preventDefault(); zona.classList.add('sobre'); });
+zona.addEventListener('dragleave', () => zona.classList.remove('sobre'));
+zona.addEventListener('drop', e => { e.preventDefault(); zona.classList.remove('sobre'); abrirArquivo(e.dataTransfer.files[0]); });
+
+$('#exemplo').addEventListener('click', () => comPython('Montando o exemplo… na primeira vez leva uns 20 segundos.', async web => {
+  const bytes = web.planilha_bytes(true, hojeIso()).toJs();
+  const res = JSON.parse(web.relatorio_de_bytes(bytes, 'exemplo-ficticio.xlsx', hojeIso(), agoraTexto()));
+  mostrarRelatorio(res.html);
+}));
+$('#modelo').addEventListener('click', () => comPython('Montando o modelo vazio…', async web => {
+  baixar(web.planilha_bytes(false, hojeIso()).toJs(), 'controle-sst.xlsx');
+  avisar('Modelo baixado: controle-sst.xlsx. Preencha e abra aqui.');
+}));
+
+preparar().catch(() => {});
+</script>
+</body>
+</html>
