@@ -8,6 +8,8 @@ fontes: ["[[001 Prazos e Periodicidades]]"]
 
 # Controle de vencimentos de SST
 
+> **Online:** https://debbas04.github.io/vencimentos-sst/ (repositório público `Debbas04/vencimentos-sst`, só código). O técnico abre o link, escolhe a planilha e o relatório aparece; a planilha é lida no navegador dele e não é enviada. Para atualizar o site depois de mudar os scripts: `git add -A`, `git commit` e `git push` nesta pasta.
+
 Lê uma planilha com funcionários, o que cada função exige e os registros de ASO, treinamentos e OS. Gera um relatório HTML do que está **vencido**, **faltando**, vencendo em **até 30 dias** e em **31 a 60 dias**, por obra e por empresa (próprios e terceirizados), mais os **CA de EPI**.
 
 ## Arquivos
@@ -18,6 +20,8 @@ Lê uma planilha com funcionários, o que cada função exige e os registros de 
 | `RODAR.bat` | Dois cliques: gera o relatório e abre no navegador |
 | `vencimentos.py` | Lê a planilha e calcula a situação de cada item |
 | `relatorio.py` | Monta o HTML do relatório (visual, filtros, impressão) |
+| `index.html` + `web.py` | Versão online: roda os mesmos scripts no navegador com Pyodide |
+| `.gitignore` | Impede que planilhas (`*.xlsx`) e `relatorios/` subam para o GitHub |
 | `criar_planilha.py` | Cria um modelo novo (vazio ou com exemplo) |
 | `esquema.py` | Abas, colunas, itens e funções padrão (mude aqui para mudar nos dois scripts) |
 | `relatorios/` | Relatórios gerados, um por data |
@@ -65,5 +69,5 @@ Funciona no celular, no modo escuro e na impressão (Ctrl+P sai sem os filtros e
 ## Próximos passos
 
 1. Trocar o exemplo pela planilha que o técnico usa hoje: adaptar as colunas dela ao esquema, ou o esquema a ela.
-2. Versão em HTML puro (abre a planilha no navegador, sem Python) para rodar no PC do técnico.
+2. ~~Versão no navegador, sem instalar Python~~: feita (link no topo).
 3. Aviso automático semanal (tarefa agendada no Windows ou e-mail para o técnico).
